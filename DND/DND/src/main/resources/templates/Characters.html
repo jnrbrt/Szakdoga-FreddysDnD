@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Bejelentkezve</title>
+    <style>
+        .details-container {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.toggle-btn {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.toggle-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.arrow {
+    font-size: 18px;
+    margin-left: 10px;
+}
+#weaponForm {
+            display: none;
+            margin-top: 10px;
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<h1>Üdvözöllek, <span th:text="${username}">Felhasználó</span>!</h1>
+<div>
+    <!-- A kép URL-jét átadott érték alapján jelenítjük meg -->
+    <img th:src="${imageurl}" alt="Felhasználó Kép" width="100"/>
+</div>
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Logout</button>
+    <a href="/create" class="btn btn-primary">Create New Character</a>
+</form>
+
+<div th:if="${characterLimitError}" id="error-message" class="error-message">
+    <p th:text="${characterLimitError}" style="color: red; font-weight: bold;"></p>
+</div>
+
+<script>
+    setTimeout(function() {
+        let errorMessage = document.getElementById("error-message");
+        if (errorMessage) {
+            errorMessage.style.display = "none";
+        }
+    }, 5000); // 5 másodperc után eltűnik
+</script>
+
+<a th:href="@{/back}">Back</a>
+
+
+
+<h2>Karaktereid:</h2>
+
+<div th:each="character : ${characters}">
+    <!-- A karakter neve és a nyíl gomb -->
+    <div>
+        <strong>
+            <a href="javascript:void(0);" class="toggle-btn">
+                Name: <span th:text="${character.name}"></span> <span class="arrow">&#9654;</span>
+            </a>
+        </strong>
+
+        <!-- A karakter részletes adatai -->
+        <ul class="details-container" style="display: none;">
+            <p><strong>Level:</strong> <span th:text="${character.level}"></span></p>
+            <p><strong>Race:</strong> <span th:text="${character.race}"></span></p>
+            <p><strong>Class:</strong> <span th:text="${character.klass}"></span></p>
+            <p><strong>Background:</strong> <span th:text="${character.background}"></span></p>
+            <p><strong>Alignment:</strong> <span th:text="${character.alignment}"></span></p>
+            <p><strong>Strength:</strong> <span th:text="${character.strength}"></span></p>
+            <p><strong>Dexterity:</strong> <span th:text="${character.dexterity}"></span></p>
+            <p><strong>Constitution:</strong> <span th:text="${character.constitution}"></span></p>
+            <p><strong>Intelligence:</strong> <span th:text="${character.intelligence}"></span></p>
+            <p><strong>Wisdom:</strong> <span th:text="${character.wisdom}"></span></p>
+            <p><strong>Charisma:</strong> <span th:text="${character.charisma}"></span></p>
+            <p><strong>Speed:</strong> <span th:text="${character.speed}"></span></p>
+            <p><strong>XP:</strong> <span th:text="${character.xp}"></span></p>
+            <p><strong>Initiative:</strong> <span th:text="${character.initiative}"></span></p>
+            <p><strong>Armor Class:</strong> <span th:text="${character.armor_class}"></span></p>
+            <p><strong>Hit Dice:</strong> <span th:text="${character.hit_dice}"></span></p>
+            <p><strong>HP:</strong> <span th:text="${character.hp}"></span></p>
+            <p><strong>Deity:</strong> <span th:text="${character.deity}"></span></p>
+            <p><strong>Image:</strong> <img th:src="@{${character.image_URL}}" alt="Character Image" width="40" height="40"/></p>
+            <!-- Delete gomb -->
+            <form th:action="@{/deleteCharacter}" method="post">
+                <input type="hidden" th:name="characterId" th:value="${character.id}">
+                <button type="submit">Delete</button>
+            </form>
+
+            <!-- Edit gomb -->
+            <a th:href="@{/edit/{id}(id=${character.id})}" class="btn btn-secondary">Edit</a>
+
+            <h4>Skills:</h4>
+            <ul>
+                <li th:each="skill : ${skillsMap[character.name]}">
+                    <strong>Name:</strong> <span th:text="${skill.name}"></span><br>
+                    <strong>Email::</strong> <span th:text="${skill.email}"></span><br>
+
+                    <strong>Acrobatics:</strong> <span th:text="${skill.acrobatics}"></span>
+                    <strong>Proficiency:</strong> <span th:text="${skill.acrobatics_p}"></span><br>
+
+                    <strong>Animal Handling:</strong> <span th:text="${skill.animal_handling}"></span>
+                    <strong>Proficiency:</strong> <span th:text="${skill.animal_handling_p}"></span><br>
+
+                    <strong>Arcane:</strong> <span th:text="${skill.arcane}"></span>
+                    <strong>Proficiency:</strong> <span th:text="${skill.arcane_p}"></span><br>
+
+                    <strong>Athletics:</strong> <span th:text="${skill.athletics}"></span>
+                    <strong>Proficiency:</strong> <span th:text="${skill.athletics_p}"></span><br>
+
+                    <strong>Deception:</strong> <span th:text="${skill.deception}"></span>
+                    <strong>Proficiency:</strong> <span th:text="${skill.deception_p}"></span><br>
+
+                    <strong>History:</strong> <span th:text="${skill.history}"></span>
+                    <strong>Proficiency:</strong> <span th:text="${skill.history_p}"></span><br>
+
+                    <strong>Insight:</strong> <span th:text="${skill.insight}"></span>
+                    <strong>Proficiency:</strong> <span th:text="${skill.insight_p}"></span><br>
+
+                    <strong>Intimidation:</strong> <span th:text="${skill.intimidation}"></span>
+                    <strong>Proficiency:</strong> <span th:text="${skill.intimidation_p}"></span><br>
+
+                    <strong>Investigation:</strong> <span th:text="${skill.investigation}"></span>
+                    <strong>Proficiency:</strong> <span th:text="${skill.investigation_p}"></span><br>
+
+                    <strong>Medicine:</strong> <span th:text="${skill.medicine}"></span>
+                    <strong>Proficiency:</strong> <span th:text="${skill.medicine_p}"></span><br>
+
+                    <strong>Nature:</strong> <span th:text="${skill.nature}"></span>
+                    <strong>Proficiency:</strong> <span th:text="${skill.nature_p}"></span><br>
+
+                    <strong>Perception:</strong> <span th:text="${skill.perception}"></span>
+                    <strong>Proficiency:</strong> <span th:text="${skill.perception_p}"></span><br>
+
+                    <strong>Performance:</strong> <span th:text="${skill.performance}"></span>
+                    <strong>Proficiency:</strong> <span th:text="${skill.performance_p}"></span><br>
+
+                    <strong>Persuasion:</strong> <span th:text="${skill.persuasion}"></span>
+                    <strong>Proficiency:</strong> <span th:text="${skill.persuasion_p}"></span><br>
+
+                    <strong>Religion:</strong> <span th:text="${skill.religion}"></span>
+                    <strong>Proficiency:</strong> <span th:text="${skill.religion_p}"></span><br>
+
+                    <strong>Sleight of Hand:</strong> <span th:text="${skill.sleight_of_hand}"></span>
+                    <strong>Proficiency:</strong> <span th:text="${skill.sleight_of_hand_p}"></span><br>
+
+                    <strong>Stealth:</strong> <span th:text="${skill.stealth}"></span>
+                    <strong>Proficiency:</strong> <span th:text="${skill.stealth_p}"></span><br>
+
+                    <strong>Survival:</strong> <span th:text="${skill.survival}"></span>
+                    <strong>Proficiency:</strong> <span th:text="${skill.survival_p}"></span><br>
+                </li>
+            </ul>
+
+            <h4>Saving Throws:</h4>
+            <ul>
+                <li th:each="saving_throw : ${saving_throws_map[character.name]}">
+                    <strong>Name:</strong> <span th:text="${saving_throw.name}"></span><br>
+
+                    <strong>Strength:</strong> <span th:text="${saving_throw.str}"></span>
+                    <strong>Proficiency:</strong> <span th:text="${saving_throw.str_p}"></span><br>
+
+                    <strong>Dexterity:</strong> <span th:text="${saving_throw.dex}"></span>
+                    <strong>Proficiency:</strong> <span th:text="${saving_throw.dex_p}"></span><br>
+
+                    <strong>Constitution:</strong> <span th:text="${saving_throw.con}"></span>
+                    <strong>Proficiency:</strong> <span th:text="${saving_throw.con_p}"></span><br>
+
+                    <strong>Intelligence:</strong> <span th:text="${saving_throw.intelligence}"></span>
+                    <strong>Proficiency:</strong> <span th:text="${saving_throw.intelligence_p}"></span><br>
+
+                    <strong>Wisdom:</strong> <span th:text="${saving_throw.wis}"></span>
+                    <strong>Proficiency:</strong> <span th:text="${saving_throw.wis_p}"></span><br>
+
+                    <strong>Charisma:</strong> <span th:text="${saving_throw.cha}"></span>
+                    <strong>Proficiency:</strong> <span th:text="${saving_throw.cha_p}"></span><br>
+                </li>
+            </ul>
+
+            <h4>Features:</h4>
+            <div th:with="feature=${features_map[character.name]}">
+                <strong>Name:</strong> <span th:text="${feature.name}"></span><br>
+                <strong>Email:</strong> <span th:text="${feature.email}"></span><br>
+                <strong>Egy:</strong> <span th:text="${feature.egy}"></span><br>
+                <strong>Kettő:</strong> <span th:text="${feature.ketto}"></span><br>
+                <strong>Három:</strong> <span th:text="${feature.harom}"></span><br>
+                <strong>Négy:</strong> <span th:text="${feature.negy}"></span><br>
+                <strong>Öt:</strong> <span th:text="${feature.ot}"></span><br>
+                <strong>Hat:</strong> <span th:text="${feature.hat}"></span><br>
+                <strong>Hét:</strong> <span th:text="${feature.het}"></span><br>
+                <strong>Nyolc:</strong> <span th:text="${feature.nyolc}"></span><br>
+                <strong>Kilenc:</strong> <span th:text="${feature.kilenc}"></span><br>
+                <strong>Tíz:</strong> <span th:text="${feature.tiz}"></span><br>
+                <strong>Tizenegy:</strong> <span th:text="${feature.tizenegy}"></span><br>
+                <strong>Tizenkettő:</strong> <span th:text="${feature.tizenkette}"></span><br>
+                <strong>Tizenhárom:</strong> <span th:text="${feature.tizenharom}"></span><br>
+                <strong>Tizennégy:</strong> <span th:text="${feature.tizennegy}"></span><br>
+                <strong>Tizenöt:</strong> <span th:text="${feature.tizenot}"></span><br>
+                <strong>Tizenhat:</strong> <span th:text="${feature.tizenhat}"></span><br>
+                <strong>Tizenhét:</strong> <span th:text="${feature.tizenhet}"></span><br>
+                <strong>Tizennyolc:</strong> <span th:text="${feature.tizennyolc}"></span><br>
+                <strong>Tizenkilenc:</strong> <span th:text="${feature.tizenkilenc}"></span><br>
+                <strong>Húsz:</strong> <span th:text="${feature.husz}"></span><br>
+            </div>
+
+
+
+            <h4>Weapons:</h4>
+            <ul>
+                <li th:each="weapon : ${weapons_map[character.name]}">
+                    <strong>Name:</strong> <span th:text="${weapon.name}"></span><br>
+                    <strong>Weapon Name:</strong> <span th:text="${weapon.weapon_name}"></span>
+                    <strong>Damage:</strong> <span th:text="${weapon.damage}"></span>
+                    <strong>Wight:</strong> <span th:text="${weapon.weight}"></span>
+                    <strong>Properties:</strong> <span th:text="${weapon.properties}"></span>
+                </li>
+            </ul>
+
+            <h4>Armors:</h4>
+            <ul>
+                <li th:each="armor : ${armors_map[character.name]}">
+                    <strong>Name:</strong> <span th:text="${armor.name}"></span><br>
+                    <strong>Weapon Name:</strong> <span th:text="${armor.armor_name}"></span>
+                    <strong>AC:</strong> <span th:text="${armor.ac}"></span>
+                    <strong>Wight:</strong> <span th:text="${armor.weight}"></span>
+                    <strong>Properties:</strong> <span th:text="${armor.properties}"></span>
+                </li>
+            </ul>
+
+            <h4>Shields:</h4>
+            <ul>
+                <li th:each="shield : ${shields_map[character.name]}">
+                    <strong>Name:</strong> <span th:text="${shield.name}"></span><br>
+                    <strong>Weapon Name:</strong> <span th:text="${shield.shield_name}"></span>
+                    <strong>AC:</strong> <span th:text="${shield.ac}"></span>
+                    <strong>Wight:</strong> <span th:text="${shield.weight}"></span>
+                    <strong>Properties:</strong> <span th:text="${shield.properties}"></span>
+                </li>
+            </ul>
+
+            <h4>Character's notes:</h4>
+
+            <div th:with="notes=${characters_notes_maps[character.name]}">
+                <!-- Story - csak olvasásra -->
+                <p><strong>Story:</strong></p>
+                <textarea rows="4" cols="50" readonly th:text="${notes.story}"></textarea>
+
+                <!-- Inventory -->
+                <p><strong>Inventory:</strong></p>
+                <form th:action="@{/save_inventory}" method="post">
+                    <input type="hidden" name="id" th:value="${character.id}" />
+                    <textarea name="inventory" rows="4" cols="50" th:text="${notes.inventory}"></textarea>
+                    <br>
+                    <button type="submit">Save Inventory</button>
+                </form>
+
+                <!-- Notes -->
+                <p><strong>Notes:</strong></p>
+                <form th:action="@{/save_notes}" method="post">
+                    <input type="hidden" name="id" th:value="${character.id}" />
+                    <textarea name="note" rows="4" cols="50" th:text="${notes.notes}"></textarea>
+                    <br>
+                    <button type="submit">Save Notes</button>
+                </form>
+            </div>
+
+            <div th:with="currency=${currency_map[character.name]}">
+                <p><strong>Currency:</strong></p>
+                <form th:action="@{/save_currency}" method="post">
+                    <input type="hidden" name="id" th:value="${currency.id}" />
+                    <input type="hidden" name="email" th:value="${currency.email}" />
+                    <input type="hidden" name="name" th:value="${currency.name}" />
+
+                    <div>
+                        <label>Copper:</label>
+                        <button type="button"
+                                th:onclick="'changeValue(\'copper_' + ${character.id} + '\', -1)'">-</button>
+                        <input type="number"
+                               th:id="'copper_' + ${character.id}"
+                               name="copper"
+                               th:value="${currency.copper}"
+                               min="0" />
+                        <button type="button"
+                                th:onclick="'changeValue(\'copper_' + ${character.id} + '\', 1)'">+</button>
+                    </div>
+
+                    <div>
+                        <label>Silver:</label>
+                        <button type="button"
+                                th:onclick="'changeValue(\'silver_' + ${character.id} + '\', -1)'">-</button>
+                        <input type="number"
+                               th:id="'silver_' + ${character.id}"
+                               name="silver"
+                               th:value="${currency.silver}"
+                               min="0" />
+                        <button type="button"
+                                th:onclick="'changeValue(\'silver_' + ${character.id} + '\', 1)'">+</button>
+                    </div>
+
+                    <div>
+                        <label>Gold:</label>
+                        <button type="button"
+                                th:onclick="'changeValue(\'gold_' + ${character.id} + '\', -1)'">-</button>
+                        <input type="number"
+                               th:id="'gold_' + ${character.id}"
+                               name="gold"
+                               th:value="${currency.gold}"
+                               min="0" />
+                        <button type="button"
+                                th:onclick="'changeValue(\'gold_' + ${character.id} + '\', 1)'">+</button>
+                    </div>
+
+                    <div>
+                        <label>Platinum:</label>
+                        <button type="button"
+                                th:onclick="'changeValue(\'platinum_' + ${character.id} + '\', -1)'">-</button>
+                        <input type="number"
+                               th:id="'platinum_' + ${character.id}"
+                               name="platinum"
+                               th:value="${currency.platinum}"
+                               min="0" />
+                        <button type="button"
+                                th:onclick="'changeValue(\'platinum_' + ${character.id} + '\', 1)'">+</button>
+                    </div>
+
+                    <br>
+                    <button type="submit">Save Currency</button>
+                </form>
+            </div>
+
+            <script th:inline="javascript">
+                function changeValue(id, delta) {
+                    const input = document.getElementById(id);
+                    if (input) {
+                        let value = parseInt(input.value) || 0;
+                        value += delta;
+                        if (value < 0) value = 0;
+                        input.value = value;
+                    }
+                }
+            </script>
+        </ul>
+    </div>
+</div>
+<script>
+    console.log(window.location.href);
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".toggle-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            let detailsContainer = this.closest('div').querySelector(".details-container");
+            let arrow = this.querySelector(".arrow");
+
+            if (detailsContainer.style.display === "none" || detailsContainer.style.display === "") {
+                detailsContainer.style.display = "block";
+                arrow.innerHTML = "&#9660;"; // Lefelé mutató nyíl
+            } else {
+                detailsContainer.style.display = "none";
+                arrow.innerHTML = "&#9654;"; // Jobbra mutató nyíl
+            }
+        });
+    });
+});
+</script>
+</body>
+</html>
+

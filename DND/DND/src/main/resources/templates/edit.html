@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Karakter Módosítása</title>
+  <style>
+    .image-option label {
+        display: inline-block;
+        cursor: pointer;
+        margin: 10px;
+        border: 2px solid transparent;
+    }
+
+    .image-option img {
+        width: 40px; /* Kis előnézeti méret */
+        height: 40px;
+    }
+
+    /* Ha egy rádiógomb ki van választva, akkor a hozzátartozó kép bekereteződik */
+    input[type="radio"]:checked + img {
+        border: 2px solid blue;
+    }
+
+    input[type="radio"] {
+        display: none; /* Rádiógomb elrejtése */
+    }
+  </style>
+</head>
+<body>
+<h1>Karakter Módosítása</h1>
+  <form th:action="@{/edit/{id}(id=${id})}" method="post" th:object="${characterDto}" id="character-form">
+    <label for="name">Karakter neve:</label>
+    <input type="text" id="name" th:field="*{name}" placeholder="Karakter neve" readonly required /><br/>
+
+    <label for="level">Szint:</label>
+    <input type="number" id="level" th:field="*{level}" required /><br/>
+
+    <label for="race">Race:</label>
+    <select id="race" th:field="*{race}" required>
+      <option value="Human">Human</option>
+      <option value="Elf">Elf</option>
+      <option value="Half-Elf">Half-Elf</option>
+      <option value="Halfling">Halfling</option>
+      <option value="Tiefling">Tiefling</option>
+      <option value="Half-Orc">Half-Orc</option>
+      <option value="Gnome">Gnome</option>
+      <option value="Dwarf">Dwarf</option>
+      <option value="Dragonborn">Dragonborn</option>
+    </select>
+
+    <br>
+
+    <label for="class">Class:</label>
+    <select id="class" th:field="*{klass}" required>
+      <option value="Barbarian">Barbarian</option>
+      <option value="Bard">Bard</option>
+      <option value="Cleric">Cleric</option>
+      <option value="Druid">Druid</option>
+      <option value="Fighter">Fighter</option>
+      <option value="Monk">Monk</option>
+      <option value="Paladin">Paladin</option>
+      <option value="Ranger">Ranger</option>
+      <option value="Rogue">Rogue</option>
+      <option value="Sorcerer">Sorcerer</option>
+      <option value="Warlock">Warlock</option>
+      <option value="Wizard">Wizard</option>
+    </select>
+
+    <br>
+
+    <label for="background">Background:</label>
+    <select id="background" th:field="*{background}" required>
+      <option value="Acolyte">Acolyte</option>
+      <option value="Artisan">Artisan</option>
+      <option value="Charlatan">Charlatan</option>
+      <option value="Criminal">Criminal</option>
+      <option value="Entertainer">Entertainer</option>
+      <option value="Farmer">Farmer</option>
+      <option value="Guard">Guard</option>
+      <option value="Guide">Guide</option>
+      <option value="Hermit">Hermit</option>
+      <option value="Merchent">Merchent</option>
+      <option value="Noble">Noble</option>
+      <option value="Sage">Sage</option>
+      <option value="Scribe">Scribe</option>
+      <option value="Soldier">Soldier</option>
+      <option value="Wayfarer">Wayfarer</option>
+    </select>
+
+    <br>
+
+    <label for="alignment">Alignment:</label>
+    <select id="alignment" th:field="*{alignment}" required>
+      <option value="Lawful good">Lawful Good</option>
+      <option value="Neutral good">Neutral Good</option>
+      <option value="Chaotic good">Chaotic Good</option>
+      <option value="Lawful neutral">Lawful Neutral</option>
+      <option value="Neutral">Neutral</option>
+      <option value="Chaotic neutral">Chaotic Neutral</option>
+      <option value="Lawful evil">Lawful Evil</option>
+      <option value="Neutral evil">Neutral Evil</option>
+      <option value="Chaotic evil">Chaotic Evil</option>
+    </select>
+
+    <label for="strength">Erő:</label>
+    <input type="number" id="strength" th:field="*{strength}" required /><br/>
+
+    <label for="dexterity">Ügyesség:</label>
+    <input type="number" id="dexterity" th:field="*{dexterity}" required /><br/>
+
+    <label for="constitution">Testalkat:</label>
+    <input type="number" id="constitution" th:field="*{constitution}" required /><br/>
+
+    <label for="intelligence">Intelligencia:</label>
+    <input type="number" id="intelligence" th:field="*{intelligence}" required /><br/>
+
+    <label for="hp">HP:</label>
+    <input type="number" id="hp" th:field="*{hp}" required><br>
+
+    <label for="wisdom">Bölcsesség:</label>
+    <input type="number" id="wisdom" th:field="*{wisdom}" required /><br/>
+
+    <label>Character Image:</label><br>
+
+    <div class="image-option">
+      <label>
+        <input type="radio" name="characterImage" value="/images/image1.jpg" th:field="*{image_URL}" required>
+        <img src="/images/image1.jpg" alt="Character Image 1">
+      </label>
+
+      <label>
+        <input type="radio" name="characterImage" value="/images/1048.jpg" th:field="*{image_URL}" required>
+        <img src="/images/1048.jpg" alt="Character Image 2">
+      </label>
+    </div>
+
+    <br>
+
+    <h4>Features:</h4>
+    <div th:object="${feature}" method="post">
+      <label>Egy:</label>
+      <input type="text" th:field="*{egy}" /><br>
+
+      <label>Kettő:</label>
+      <input type="text" th:field="*{ketto}" /><br>
+
+      <label>Három:</label>
+      <input type="text" th:field="*{harom}" /><br>
+
+      <label>Négy:</label>
+      <input type="text" th:field="*{negy}" /><br>
+
+      <label>Öt:</label>
+      <input type="text" th:field="*{ot}" /><br>
+
+      <label>Hat:</label>
+      <input type="text" th:field="*{hat}" /><br>
+
+      <label>Hét:</label>
+      <input type="text" th:field="*{het}" /><br>
+
+      <label>Nyolc:</label>
+      <input type="text" th:field="*{nyolc}" /><br>
+
+      <label>Kilenc:</label>
+      <input type="text" th:field="*{kilenc}" /><br>
+
+      <label>Tíz:</label>
+      <input type="text" th:field="*{tiz}" /><br>
+
+      <label>Tizenegy:</label>
+      <input type="text" th:field="*{tizenegy}" /><br>
+
+      <label>Tizenkettő:</label>
+      <input type="text" th:field="*{tizenkette}" /><br>
+
+      <label>Tizenhárom:</label>
+      <input type="text" th:field="*{tizenharom}" /><br>
+
+      <label>Tizennégy:</label>
+      <input type="text" th:field="*{tizennegy}" /><br>
+
+      <label>Tizenöt:</label>
+      <input type="text" th:field="*{tizenot}" /><br>
+
+      <label>Tizenhat:</label>
+      <input type="text" th:field="*{tizenhat}" /><br>
+
+      <label>Tizenhét:</label>
+      <input type="text" th:field="*{tizenhet}" /><br>
+
+      <label>Tizennyolc:</label>
+      <input type="text" th:field="*{tizennyolc}" /><br>
+
+      <label>Tizenkilenc:</label>
+      <input type="text" th:field="*{tizenkilenc}" /><br>
+
+      <label>Húsz:</label>
+      <input type="text" th:field="*{husz}" /><br>
+    </div>
+
+    <br>
+
+    <h2>Weapons</h2>
+    <div id="weapons-container">
+      <th:block th:each="weapon : ${equipments.weapons}">
+        <div class="weapon-entry">
+          <input type="text" th:value="${weapon.weapon_name}" class="weapon-name" placeholder="Name">
+          <input type="text" th:value="${weapon.damage}" class="weapon-damage" placeholder="Damage">
+          <input type="text" th:value="${weapon.weight}" class="weapon-weight" placeholder="Weight">
+          <input type="text" th:value="${weapon.properties}" class="weapon-properties" placeholder="Properties">
+          <button type="button" onclick="removeEntry(this)">❌</button>
+        </div>
+      </th:block>
+    </div>
+    <button type="button" onclick="addWeapon()">➕ Add Weapon</button>
+
+    <h2>Armors</h2>
+    <div id="armors-container">
+      <th:block th:each="armor : ${equipments.armors}">
+        <div class="armor-entry">
+          <input type="text" th:value="${armor.armor_name}" class="armor-name" placeholder="Name">
+          <input type="text" th:value="${armor.ac}" class="armor-ac" placeholder="Armor Class">
+          <input type="text" th:value="${armor.weight}" class="armor-weight" placeholder="Weight">
+          <input type="text" th:value="${armor.properties}" class="armor-properties" placeholder="Properties">
+          <button type="button" onclick="removeEntry(this)">❌</button>
+        </div>
+      </th:block>
+    </div>
+    <button type="button" onclick="addArmor()">➕ Add Armor</button>
+
+    <h2>Shields</h2>
+    <div id="shields-container">
+      <th:block th:each="shield : ${equipments.shields}">
+        <div class="shield-entry">
+          <input type="text" th:value="${shield.shield_name}" class="shield-name" placeholder="Name">
+          <input type="text" th:value="${shield.ac}" class="shield-ac" placeholder="Armor Class">
+          <input type="text" th:value="${shield.weight}" class="shield-weight" placeholder="Weight">
+          <input type="text" th:value="${shield.properties}" class="shield-properties" placeholder="Properties">
+          <button type="button" onclick="removeEntry(this)">❌</button>
+        </div>
+      </th:block>
+    </div>
+    <button type="button" onclick="addShield()">➕ Add Shield</button>
+
+    <hr>
+    <input type="hidden" name="equipmentJson" id="equipmentJson">
+
+    <script>
+      function removeEntry(btn) {
+        btn.parentElement.remove();
+      }
+
+      function addWeapon() {
+        document.getElementById("weapons-container").insertAdjacentHTML("beforeend", `
+          <div class="weapon-entry">
+            <input type="text" class="weapon-name" placeholder="Name">
+            <input type="text" class="weapon-damage" placeholder="Damage">
+            <input type="text" class="weapon-weight" placeholder="Weight">
+            <input type="text" class="weapon-properties" placeholder="Properties">
+            <button type="button" onclick="removeEntry(this)">❌</button>
+          </div>
+        `);
+      }
+
+      function addArmor() {
+        document.getElementById("armors-container").insertAdjacentHTML("beforeend", `
+          <div class="armor-entry">
+            <input type="text" class="armor-name" placeholder="Name">
+            <input type="text" class="armor-ac" placeholder="Armor Class">
+            <input type="text" class="armor-weight" placeholder="Weight">
+            <input type="text" class="armor-properties" placeholder="Properties">
+            <button type="button" onclick="removeEntry(this)">❌</button>
+          </div>
+        `);
+      }
+
+      function addShield() {
+        document.getElementById("shields-container").insertAdjacentHTML("beforeend", `
+          <div class="shield-entry">
+            <input type="text" class="shield-name" placeholder="Name">
+            <input type="text" class="shield-ac" placeholder="Armor Class">
+            <input type="text" class="shield-weight" placeholder="Weight">
+            <input type="text" class="shield-properties" placeholder="Properties">
+            <button type="button" onclick="removeEntry(this)">❌</button>
+          </div>
+        `);
+      }
+
+      function finalizeEquipment() {
+        const weapons = Array.from(document.querySelectorAll('.weapon-entry')).map(div => ({
+          weapon_name: div.querySelector('.weapon-name').value,
+          damage: div.querySelector('.weapon-damage').value,
+          weight: div.querySelector('.weapon-weight').value,
+          properties: div.querySelector('.weapon-properties').value
+        }));
+
+        const armors = Array.from(document.querySelectorAll('.armor-entry')).map(div => ({
+          armor_name: div.querySelector('.armor-name').value,
+          ac: div.querySelector('.armor-ac').value,
+          weight: div.querySelector('.armor-weight').value,
+          properties: div.querySelector('.armor-properties').value
+        }));
+
+        const shields = Array.from(document.querySelectorAll('.shield-entry')).map(div => ({
+          shield_name: div.querySelector('.shield-name').value,
+          ac: div.querySelector('.shield-ac').value,
+          weight: div.querySelector('.shield-weight').value,
+          properties: div.querySelector('.shield-properties').value
+        }));
+
+        const equipmentData = {
+          weapons,
+          armors,
+          shields
+        };
+
+        const jsonString = JSON.stringify(equipmentData);
+        document.getElementById('equipmentJson').value = jsonString;
+
+        console.log("Final JSON:", jsonString);
+
+        // Optional: document.getElementById("formId").submit();
+      }
+      document.getElementById('character-form').addEventListener('submit', function(event) {
+    finalizeEquipment();
+    });
+    </script>
+
+    <label for="story">Story:</label><br>
+    <textarea id="story" name="story" rows="6" cols="60"
+              th:text="${characters_notes_story}">
+    </textarea>
+
+    <button type="submit">Frissítés</button>
+  </form>
+
+<a href="/characters">Vissza a karakterek listájához</a>
+</body>
+</html>

@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create New Character</title>
+    <style>
+        .image-option label {
+            display: inline-block;
+            cursor: pointer;
+            margin: 10px;
+            border: 2px solid transparent;
+        }
+
+        .image-option img {
+            width: 40px; /* Kis előnézeti méret */
+            height: 40px;
+        }
+
+        /* Ha egy rádiógomb ki van választva, akkor a hozzátartozó kép bekereteződik */
+        input[type="radio"]:checked + img {
+            border: 2px solid blue;
+        }
+
+        input[type="radio"] {
+            display: none; /* Rádiógomb elrejtése */
+        }
+    </style>
+</head>
+<body>
+<h2>Create New Character</h2>
+<form th:action="@{/create}" method="post">
+    <!-- CharacterDto adatmezők -->
+    <div th:object="${characterDto}">
+        <h3>Character Information</h3>
+
+        <label for="name">Name:</label>
+        <input type="text" id="name" th:field="*{name}" placeholder="Character Name" required><br>
+
+        <div th:if="${errorMessage}" style="color: red;">
+            <p th:text="${errorMessage}"></p>
+        </div>
+
+        <label for="level">Level:</label>
+        <input type="text" id="level" th:field="*{level}" required><br>
+
+        <label for="race">Race:</label>
+        <select id="race" th:field="*{race}" required>
+            <option value="Human">Human</option>
+            <option value="Elf">Elf</option>
+            <option value="Half-Elf">Half-Elf</option>
+            <option value="Halfling">Halfling</option>
+            <option value="Tiefling">Tiefling</option>
+            <option value="Half-Orc">Half-Orc</option>
+            <option value="Gnome">Gnome</option>
+            <option value="Dwarf">Dwarf</option>
+            <option value="Dragonborn">Dragonborn</option>
+        </select>
+        <br>
+
+        <label for="klass">Class:</label>
+        <select id="klass" th:field="*{klass}" required>
+            <option value="Barbarian">Barbarian</option>
+            <option value="Bard">Bard</option>
+            <option value="Cleric">Cleric</option>
+            <option value="Druid">Druid</option>
+            <option value="Fighter">Fighter</option>
+            <option value="Monk">Monk</option>
+            <option value="Paladin">Paladin</option>
+            <option value="Ranger">Ranger</option>
+            <option value="Rogue">Rogue</option>
+            <option value="Sorcerer">Sorcerer</option>
+            <option value="Warlock">Warlock</option>
+            <option value="Wizard">Wizard</option>
+        </select>
+        <br>
+
+        <label for="background">Background:</label>
+        <select id="background" th:field="*{background}" required>
+            <option value="Acolyte">Acolyte</option>
+            <option value="Artisan">Artisan</option>
+            <option value="Charlatan">Charlatan</option>
+            <option value="Criminal">Criminal</option>
+            <option value="Entertainer">Entertainer</option>
+            <option value="Farmer">Farmer</option>
+            <option value="Guard">Guard</option>
+            <option value="Guide">Guide</option>
+            <option value="Hermit">Hermit</option>
+            <option value="Merchant">Merchant</option>
+            <option value="Noble">Noble</option>
+            <option value="Sage">Sage</option>
+            <option value="Scribe">Scribe</option>
+            <option value="Soldier">Soldier</option>
+            <option value="Wayfarer">Wayfarer</option>
+        </select>
+        <br>
+
+        <label for="alignment">Alignment:</label>
+        <select id="alignment" th:field="*{alignment}" required>
+            <option value="Lawful good">Lawful Good</option>
+            <option value="Neutral good">Neutral Good</option>
+            <option value="Chaotic good">Chaotic Good</option>
+            <option value="Lawful neutral">Lawful Neutral</option>
+            <option value="Neutral">Neutral</option>
+            <option value="Chaotic neutral">Chaotic Neutral</option>
+            <option value="Lawful evil">Lawful Evil</option>
+            <option value="Neutral evil">Neutral Evil</option>
+            <option value="Chaotic evil">Chaotic Evil</option>
+        </select>
+        <br>
+
+
+
+        <!-- Statikus attribútumok -->
+        <label for="strength">Strength:</label>
+        <input type="number" id="strength" th:field="*{strength}" required><br>
+
+        <label for="dexterity">Dexterity:</label>
+        <input type="number" id="dexterity" th:field="*{dexterity}" required><br>
+
+        <label for="constitution">Constitution:</label>
+        <input type="number" id="constitution" th:field="*{constitution}" required><br>
+
+        <label for="intelligence">Intelligence:</label>
+        <input type="number" id="intelligence" th:field="*{intelligence}" required><br>
+
+        <label for="wisdom">Wisdom:</label>
+        <input type="number" id="wisdom" th:field="*{wisdom}" required><br>
+
+        <label for="charisma">Charisma:</label>
+        <input type="number" id="charisma" th:field="*{charisma}" required><br>
+
+        <label for="hp">HP:</label>
+        <input type="number" id="hp" th:field="*{hp}" required><br>
+
+        <!-- Kép kiválasztása -->
+        <label>Character Image:</label><br>
+        <div class="image-option">
+            <label>
+                <input type="radio" name="characterImage" value="/images/image1.jpg" th:field="*{image_URL}" required>
+                <img src="/images/image1.jpg" alt="Character Image 1">
+            </label>
+
+            <label>
+                <input type="radio" name="characterImage" value="/images/1048.jpg" th:field="*{image_URL}" required>
+                <img src="/images/1048.jpg" alt="Character Image 2">
+            </label>
+        </div>
+        <br>
+
+        <!-- Rejtett felhasználói adat -->
+        <input type="hidden" id="user" th:field="*{user}" required><br>
+    </div>
+
+
+
+    <!-- Hidden JSON Input -->
+    <input type="hidden" id="equipment" name="equipment" />
+
+    <!-- Weapons Section -->
+    <h3>Weapons</h3>
+    <div id="weapons-container"></div>
+    <button type="button" onclick="addEquipment('weapon')">Add New Weapon</button>
+
+    <!-- Armors Section -->
+    <h3>Armors</h3>
+    <div id="armors-container"></div>
+    <button type="button" onclick="addEquipment('armor')">Add New Armor</button>
+
+    <!-- Shields Section -->
+    <h3>Shields</h3>
+    <div id="shields-container"></div>
+    <button type="button" onclick="addEquipment('shield')">Add New Shield</button>
+
+    <script>
+        let weaponCount = 0, armorCount = 0, shieldCount = 0;
+        const maxWeapons = 5, maxArmors = 3, maxShields = 3;
+
+        function updateEquipment() {
+            let equipment = {
+                weapons: collectEquipment("weapon", weaponCount, "damage"),
+                armors: collectEquipment("armor", armorCount, "armor_class"),
+                shields: collectEquipment("shield", shieldCount, "armor_class")
+            };
+
+            document.getElementById("equipment").value = JSON.stringify(equipment);
+        }
+
+        function collectEquipment(type, count, statField) {
+            let items = [];
+            for (let i = 1; i <= count; i++) {
+                let div = document.getElementById(`${type}_${i}`);
+                if (!div) continue;
+
+                let name = document.getElementById(`${type}_name_${i}`).value.trim();
+                let stat = document.getElementById(`${statField}_${i}`).value.trim();
+                let weight = document.getElementById(`${type}_weight_${i}`).value.trim();
+                let properties = document.getElementById(`${type}_properties_${i}`).value.trim();
+
+                if (name || stat || weight || properties) {
+                    items.push({
+                        name: name,
+                        [statField]: stat,
+                        weight: weight,
+                        properties: properties
+                    });
+                }
+            }
+            return items;
+        }
+
+        function addEquipment(type) {
+            let count, max, container, statField, label;
+
+            if (type === "weapon") {
+                count = ++weaponCount;
+                max = maxWeapons;
+                container = "weapons-container";
+                statField = "damage"; // ✅ helyes kulcs
+                label = "Damage";     // ✅ helyes címke
+            } else if (type === "armor") {
+                count = ++armorCount;
+                max = maxArmors;
+                container = "armors-container";
+                statField = "armor_class";
+                label = "Armor Class";
+            } else if (type === "shield") {
+                count = ++shieldCount;
+                max = maxShields;
+                container = "shields-container";
+                statField = "armor_class";
+                label = "Armor Class";
+            }
+
+            if (count > max) {
+                alert(`Maximum ${max} ${type}s allowed!`);
+                return;
+            }
+
+            let div = document.createElement("div");
+            div.classList.add("equipment-entry");
+            div.id = `${type}_${count}`;
+            div.innerHTML = `
+                <label for="${type}_name_${count}">Name:</label>
+                <input type="text" id="${type}_name_${count}" oninput="updateEquipment()" />
+
+                <label for="${statField}_${count}">${label}:</label>
+                <input type="text" id="${statField}_${count}" oninput="updateEquipment()" />
+
+                <label for="${type}_weight_${count}">Weight:</label>
+                <input type="number" id="${type}_weight_${count}" oninput="updateEquipment()" />
+
+                <label for="${type}_properties_${count}">Properties:</label>
+                <input type="text" id="${type}_properties_${count}" oninput="updateEquipment()" />
+
+                <button type="button" onclick="removeEquipment('${type}', ${count})">Remove</button>
+            `;
+
+            document.getElementById(container).appendChild(div);
+            updateEquipment(); // frissítés azonnal
+        }
+
+        function removeEquipment(type, id) {
+            let div = document.getElementById(`${type}_${id}`);
+            if (div) {
+                div.remove();
+                updateEquipment();
+            }
+        }
+    </script>
+
+    <!-- Features_Dto adatmezők -->
+    <div th:object="${features_dto}">
+        <h3>Character Features</h3>
+
+        <label for="featureOne">Feature 1:</label>
+        <input type="text" id="featureOne" th:field="*{egy}" required><br>
+
+        <label for="featureTwo">Feature 2:</label>
+        <input type="text" id="featureTwo" th:field="*{ketto}" required><br>
+
+        <!-- További funkciók hozzáadása -->
+        <label for="featureThree">Feature 3:</label>
+        <input type="text" id="featureThree" th:field="*{harom}" required><br>
+
+        <label for="featureFour">Feature 4:</label>
+        <input type="text" id="featureFour" th:field="*{negy}" required><br>
+
+        <label for="featureFive">Feature 5:</label>
+        <input type="text" id="featureFive" th:field="*{ot}" required><br>
+
+        <label for="featureSix">Feature 6:</label>
+        <input type="text" id="featureSix" th:field="*{hat}" required><br>
+
+        <label for="featureSeven">Feature 7:</label>
+        <input type="text" id="featureSeven" th:field="*{het}" required><br>
+
+        <label for="featureEight">Feature 8:</label>
+        <input type="text" id="featureEight" th:field="*{nyolc}" required><br>
+
+        <label for="featureNine">Feature 9:</label>
+        <input type="text" id="featureNine" th:field="*{kilenc}" required><br>
+
+        <label for="featureTen">Feature 10:</label>
+        <input type="text" id="featureTen" th:field="*{tiz}" required><br>
+
+        <label for="featureEleven">Feature 11:</label>
+        <input type="text" id="featureEleven" th:field="*{tizenegy}" required><br>
+
+        <label for="featureTwelve">Feature 12:</label>
+        <input type="text" id="featureTwelve" th:field="*{tizenkette}" required><br>
+
+        <label for="featureThirteen">Feature 13:</label>
+        <input type="text" id="featureThirteen" th:field="*{tizenharom}" required><br>
+
+        <label for="featureFourteen">Feature 14:</label>
+        <input type="text" id="featureFourteen" th:field="*{tizennegy}" required><br>
+
+        <label for="featureFifteen">Feature 15:</label>
+        <input type="text" id="featureFifteen" th:field="*{tizenot}" required><br>
+
+        <label for="featureSixteen">Feature 16:</label>
+        <input type="text" id="featureSixteen" th:field="*{tizenhat}" required><br>
+
+        <label for="featureSeventeen">Feature 17:</label>
+        <input type="text" id="featureSeventeen" th:field="*{tizenhet}" required><br>
+
+        <label for="featureEighteen">Feature 18:</label>
+        <input type="text" id="featureEighteen" th:field="*{tizennyolc}" required><br>
+
+        <label for="featureNineteen">Feature 19:</label>
+        <input type="text" id="featureNineteen" th:field="*{tizenkilenc}" required><br>
+
+        <label for="featureTwenty">Feature 20:</label>
+        <input type="text" id="featureTwenty" th:field="*{husz}" required><br>
+    </div>
+
+
+    <!-- Rejtett input a JSON spell listához -->
+    <input type="hidden" id="spells" name="spells" />
+
+    <!-- Spell count selector -->
+    <h3>Spells</h3>
+    <label for="spellCount">How many spells?</label>
+    <select id="spellCount" onchange="generateSpells()">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+    </select>
+
+    <!-- Konténer a spell beviteli mezőkhöz -->
+    <div id="spells-container"></div>
+
+    <script>
+        function generateSpells() {
+            const count = parseInt(document.getElementById("spellCount").value);
+            const container = document.getElementById("spells-container");
+
+            container.innerHTML = ""; // előző elemek törlése
+
+            for (let i = 1; i <= count; i++) {
+                const div = document.createElement("div");
+                div.classList.add("spell-entry");
+                div.id = `spell_${i}`;
+
+                div.innerHTML = `
+                    <h4>Spell ${i}</h4>
+                    <label for="spell_name_${i}">Name:</label>
+                    <input type="text" id="spell_name_${i}" oninput="updateSpells()" />
+
+                    <label for="casting_action_${i}">Casting Action:</label>
+                    <input type="text" id="casting_action_${i}" oninput="updateSpells()" />
+
+                    <label for="range_area_${i}">Range/Area:</label>
+                    <input type="text" id="range_area_${i}" oninput="updateSpells()" />
+
+                    <label for="spell_school_${i}">School:</label>
+                    <input type="text" id="spell_school_${i}" oninput="updateSpells()" />
+
+                    <label for="spell_level_${i}">Level:</label>
+                    <input type="text" id="spell_level_${i}" oninput="updateSpells()" />
+
+                    <label for="spell_duration_${i}">Duration:</label>
+                    <input type="text" id="spell_duration_${i}" oninput="updateSpells()" />
+
+                    <label for="spell_description_${i}">Description:</label>
+                    <textarea id="spell_description_${i}" rows="3" oninput="updateSpells()"></textarea>
+                    <hr />
+                `;
+
+                container.appendChild(div);
+            }
+
+            updateSpells();
+        }
+
+        function updateSpells() {
+            const count = parseInt(document.getElementById("spellCount").value);
+            const spells = [];
+
+            for (let i = 1; i <= count; i++) {
+                const spell = {
+                    spell_name: document.getElementById(`spell_name_${i}`).value.trim(),
+                    casting_action: document.getElementById(`casting_action_${i}`).value.trim(),
+                    range_area: document.getElementById(`range_area_${i}`).value.trim(),
+                    spell_school: document.getElementById(`spell_school_${i}`).value.trim(),
+                    spell_level: document.getElementById(`spell_level_${i}`).value.trim(),
+                    spell_duration: document.getElementById(`spell_duration_${i}`).value.trim(),
+                    spell_description: document.getElementById(`spell_description_${i}`).value.trim()
+                };
+
+                // Ne csak üreseket vegyen fel
+                if (Object.values(spell).some(value => value !== "")) {
+                    spells.push(spell);
+                }
+            }
+
+            document.getElementById("spells").value = JSON.stringify(spells);
+        }
+    </script>
+
+
+
+    <div>
+        <label for="story_string">Your story:</label><br>
+        <textarea id="story_string" name="story_string" rows="10" cols="50" placeholder="Write your story here..."></textarea><br><br>
+    </div>
+
+    <div>
+        <label for="inventory_string">Your Inventory:</label><br>
+        <textarea id="inventory_string" name="inventory_string" rows="10" cols="50" placeholder="Write your inventory here..."></textarea><br><br>
+    </div>
+
+
+    <!--Currency-->
+    <div th:object="${currency_dto}" id="currency-container">
+        <div>
+            <label for="copper">Copper:</label>
+            <button type="button" onclick="changeValue('copper', -1)">-</button>
+            <input type="number" id="copper" th:field="*{copper}" min="0">
+            <button type="button" onclick="changeValue('copper', 1)">+</button>
+        </div>
+        <div>
+            <label for="silver">Silver:</label>
+            <button type="button" onclick="changeValue('silver', -1)">-</button>
+            <input type="number" id="silver" th:field="*{silver}" min="0">
+            <button type="button" onclick="changeValue('silver', 1)">+</button>
+        </div>
+        <div>
+            <label for="gold">Gold:</label>
+            <button type="button" onclick="changeValue('gold', -1)">-</button>
+            <input type="number" id="gold" th:field="*{gold}" min="0">
+            <button type="button" onclick="changeValue('gold', 1)">+</button>
+        </div>
+        <div>
+            <label for="platinum">Platinum:</label>
+            <button type="button" onclick="changeValue('platinum', -1)">-</button>
+            <input type="number" id="platinum" th:field="*{platinum}" min="0">
+            <button type="button" onclick="changeValue('platinum', 1)">+</button>
+        </div>
+    </div>
+
+    <script>
+        function changeValue(id, delta) {
+            const input = document.getElementById(id);
+            let value = parseInt(input.value) || 0;
+            value += delta;
+            if (value < 0) value = 0;
+            input.value = value;
+        }
+    </script>
+
+    <!-- Készítés gomb -->
+    <button type="submit">Create Character</button>
+
+
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const scrollToId = urlParams.get("scrollTo");
+            if (scrollToId) {
+                const target = document.getElementById(scrollToId);
+                if (target) {
+                    target.scrollIntoView({ behavior: "smooth" });
+                }
+            }
+        });
+    </script>
+</form>
+</body>
+</html>
